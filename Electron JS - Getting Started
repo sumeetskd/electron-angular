@@ -1,0 +1,97 @@
+To create a desktop app using Angular, you can leverage Electron, which is a framework that allows you to build cross-platform desktop applications using web technologies such as Angular, HTML, and CSS. Here's a step-by-step guide to help you get started:
+
+Step 1: Set Up the Development Environment
+1. Ensure you have Node.js and npm (Node Package Manager) installed on your machine.
+2. Install the Angular CLI by running the following command in your terminal or command prompt:
+   ```
+   npm install -g @angular/cli
+   ```
+
+Step 2: Create a New Angular Project
+1. Open your terminal or command prompt and navigate to the directory where you want to create your Angular project.
+2. Run the following command to generate a new Angular project:
+   ```
+   ng new my-electron-app
+   ```
+3. Change into the project directory:
+   ```
+   cd my-electron-app
+   ```
+
+Step 3: Install Electron
+1. Install Electron as a development dependency by running the following command:
+   ```
+   npm install electron --save-dev
+   ```
+
+Step 4: Configure Electron
+1. Create a file named `main.js` in the root directory of your Angular project.
+2. Add the following code to `main.js`:
+   ```javascript
+   const { app, BrowserWindow } = require('electron');
+   const url = require('url');
+   const path = require('path');
+
+   let mainWindow;
+
+   function createWindow() {
+     mainWindow = new BrowserWindow({
+       width: 800,
+       height: 600,
+       webPreferences: {
+         nodeIntegration: true,
+       },
+     });
+
+     mainWindow.loadURL(
+       url.format({
+         pathname: path.join(__dirname, 'dist/index.html'),
+         protocol: 'file:',
+         slashes: true,
+       })
+     );
+
+     mainWindow.on('closed', function () {
+       mainWindow = null;
+     });
+   }
+
+   app.on('ready', createWindow);
+
+   app.on('window-all-closed', function () {
+     if (process.platform !== 'darwin') {
+       app.quit();
+     }
+   });
+
+   app.on('activate', function () {
+     if (mainWindow === null) {
+       createWindow();
+     }
+   });
+   ```
+
+Step 5: Build and Run the Angular App with Electron
+1. Open the `package.json` file in your Angular project.
+2. Replace the `"scripts"` section with the following code:
+   ```json
+   "scripts": {
+     "ng": "ng",
+     "start": "ng serve",
+     "build": "ng build --prod",
+     "electron": "electron ."
+   },
+   ```
+3. Save the `package.json` file.
+4. Build your Angular app by running the following command:
+   ```
+   npm run build
+   ```
+5. Run your Electron app with the following command:
+   ```
+   npm run electron
+   ```
+
+Congratulations! You now have an Angular desktop application built with Electron. You can customize the app by modifying the Angular code in the `src` directory, and the Electron-specific code in the `main.js` file.
+
+Note: When running your Electron app, make sure you have an active internet connection as Angular apps typically rely on web assets.
